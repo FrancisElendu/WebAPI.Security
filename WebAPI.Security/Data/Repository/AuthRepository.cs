@@ -31,12 +31,16 @@ namespace WebAPI.Security.Data.Repository
             userForRegisterDto.PasswordHash = passwordHash;
             userForRegisterDto.PasswordSalt = passwordSalt;
 
+            // Generate email token and send confirmation email
+            GenerateEmailConfirmationToken(out byte[] emailTokenHash, out byte[] emailTokenSalt);
+
             var userToCreate = new User
             {
                 UserName = userForRegisterDto.UserName,
                 Email = userForRegisterDto.Email,
                 PasswordSalt = userForRegisterDto.PasswordSalt,
                 PasswordHash = userForRegisterDto.PasswordHash,
+                EmailTokenSalt = emailTokenSalt,
                 Role = "Admin",
                 //UserRole = userForRegisterDto.Role
             };
@@ -50,7 +54,7 @@ namespace WebAPI.Security.Data.Repository
 
                 // Generate email token and send confirmation email
 
-                GenerateEmailConfirmationToken(out byte[] emailTokenHash, out byte[] emailTokenSalt);
+                //GenerateEmailConfirmationToken(out byte[] emailTokenHash, out byte[] emailTokenSalt);
 
                 var confirmEmailToken = Encoding.UTF8.GetString(emailTokenHash);
 
@@ -90,7 +94,10 @@ namespace WebAPI.Security.Data.Repository
             }
             var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == userName);
             var decodedToken = WebEncoders.Base64UrlDecode(token);
-            if (!VerifyEmailConfirmationToken(decodedToken, emailTokenSalt))
+            // I need to retrieve the emailTokenSalt from Db and assign value to emailTokenSalt variable
+
+            //if (!VerifyEmailConfirmationToken(decodedToken, emailTokenSalt))
+            if (!VerifyEmailConfirmationToken(decodedToken, user.EmailTokenSalt))
                 return new UserManagerResponse<UserForRegisterDto>
                 {
                     Message = "User email not confirmed.",
