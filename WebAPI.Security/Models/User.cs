@@ -18,6 +18,7 @@ namespace WebAPI.Security.Models
         public byte[] PasswordSalt { get; set; }
         public byte[] EmailTokenSalt { get; set; }
         public string Role { get; set; }
+        public string UserRole { get; set; }
 
     }
 }

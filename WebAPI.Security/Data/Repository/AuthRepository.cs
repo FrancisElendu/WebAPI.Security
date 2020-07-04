@@ -42,7 +42,7 @@ namespace WebAPI.Security.Data.Repository
                 PasswordHash = userForRegisterDto.PasswordHash,
                 EmailTokenSalt = emailTokenSalt,
                 Role = "Admin",
-                //UserRole = userForRegisterDto.Role
+                UserRole = userForRegisterDto.Role
             };
 
             //Register new User
